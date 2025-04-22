@@ -35,7 +35,7 @@ RUN pip install --no-cache-dir \
 # Environment setup
 ARG GEMINI_API_KEY="dummy_key_for_dev"
 ENV GEMINI_API_KEY=$GEMINI_API_KEY \
-    GEMINI_MODEL="gemini-1.0-pro" \
+    GEMINI_MODEL="gemini-2.0-flash-lite-001" \
     PYTHONPATH="/app:/app/storm:/app/storm_fastapi_wrapper" \
     GOOGLE_API_REGION="us-central1"
 
