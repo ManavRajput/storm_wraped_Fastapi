@@ -175,19 +175,27 @@ Lists available Gemini models:
 
 ### Build the Docker image
 ```bash
-docker build -t storm-gemini .
+docker build --build-arg GEMINI_API_KEY=your_real_key -t storm-dev .
 ```
+This reads the Dockerfile in current directory (.)
+
+Creates an image named storm-dev
 
 ### Run the container
 ```bash
-docker run -p 8000:8000 -e GEMINI_API_KEY=your_key_here storm-gemini
+docker run -p 8000:8000 -v ./:/app/storm_fastapi_wrapper storm-dev
 ```
+-v ./:/app/storm_fastapi_wrapper connects your local folder to the container
 
-### Using .env file
-```bash
-docker run --env-file .env -p 8000:8000 storm-gemini
+-p 8000:8000 exposes the FastAPI port
+
+### File Structure In Docker Container
 ```
+/app
+├── storm/               # STORM (installed in editable mode)
+└── storm_fastapi_wrapper/  # Your FastAPI app (live-reloaded)
 
+```
 ### Available Environment Variables
 | Variable          | Default                     | Description                     |
 |-------------------|-----------------------------|---------------------------------|
