@@ -1,9 +1,10 @@
+# Development Dockerfile for STORM + FastAPI
 FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies (needed for some Python packages)
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -12,34 +13,35 @@ RUN apt-get update && apt-get install -y \
 # Install Poetry
 RUN pip install --no-cache-dir poetry
 
-# Copy project files
-COPY pyproject.toml poetry.lock ./
-COPY storm_fastapi_wrapper ./storm_fastapi_wrapper
-COPY utils ./utils
+# Clone STORM repo and install in editable mode
+RUN git clone https://github.com/stanford-oval/storm.git /app/storm && \
+    cd /app/storm && \
+    pip install -e .
 
-# Clone the STORM repo
-RUN git clone https://github.com/stanford-oval/storm.git && \
-    echo "Cloned STORM repo"
+# Clone your FastAPI wrapper
+RUN git clone https://github.com/ManavRajput/storm_wraped_Fastapi.git /app/storm_fastapi_wrapper
 
-# Install dependencies with Poetry
+# Install your project dependencies
+WORKDIR /app/storm_fastapi_wrapper
 RUN poetry config virtualenvs.create false && \
-    poetry install --no-root --no-interaction --no-ansi
+    poetry install --no-interaction --no-ansi
 
-# Install Google Generative AI package (for Gemini)
+# Install additional requirements
 RUN pip install --no-cache-dir \
     google-generativeai>=0.3.0 \
-    python-dotenv
+    python-dotenv \
+    uvicorn
 
-# Create a directory for API keys
-RUN mkdir -p /app/config && chmod 700 /app/config
-
-# Environment variables for Gemini
-ENV GEMINI_API_KEY="your-api-key-here" \
-    GEMINI_MODEL="gemini-2.0-flash-lite-001" \
+# Environment setup
+ARG GEMINI_API_KEY="dummy_key_for_dev"
+ENV GEMINI_API_KEY=$GEMINI_API_KEY \
+    GEMINI_MODEL="gemini-1.0-pro" \
+    PYTHONPATH="/app:/app/storm:/app/storm_fastapi_wrapper" \
     GOOGLE_API_REGION="us-central1"
 
-# Expose the FastAPI app port
+# Expose port
 EXPOSE 8000
 
-# Default command to run the app
-CMD ["uvicorn", "storm_fastapi_wrapper.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run your FastAPI app with auto-reload
+WORKDIR /app/storm_fastapi_wrapper
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
