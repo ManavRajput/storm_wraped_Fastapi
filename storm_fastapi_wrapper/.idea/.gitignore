@@ -1,0 +1,72 @@
+# Environment and secrets
+.env
+.env.local
+.env.*
+*.env
+secrets/
+config/credentials.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+.python-version
+venv/
+.venv/
+env/
+ENV/
+
+# Build and distribution
+dist/
+build/
+*.exe
+*.dll
+*.so
+*.dylib
+*.app
+
+# IDE and editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+
+# Jupyter and notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+*.dump
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Virtual environments (conda)
+*.conda
+conda-env/
+
+# Testing and coverage
+.coverage
+htmlcov/
+.pytest_cache/
+test-reports/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Project-specific (STORM/Docker)
+storm/  # Exclude cloned STORM repo if large
+docker-compose.override.yml
+.dockerignore
+
+# Byte-compiled / optimized files
+*.py[co]
